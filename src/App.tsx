@@ -1,12 +1,13 @@
-import './App.css'
+import { AppRouter, Nav } from './components';
+import './App.css';
 
 function App() {
-
   return (
-    <div className="App">
-      WORKS !!
-    </div>
-  )
+    <>
+      <Nav />
+      <AppRouter />
+    </>
+  );
 }
 
-export default App
+export default App;
