@@ -1,7 +1,11 @@
+
 *{
     margin: 0;
     padding: 0;
     box-sizing:border-box; 
 }
 
-@import '~antd/dist/antd.css'
+.h100 {
+    height: calc(100vh - 64px);
+}
+

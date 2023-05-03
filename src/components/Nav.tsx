@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { RouteNames } from '../router';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/slices/ActionCreators';
 
 const items1: MenuProps['items'] = ['1'].map((key) => ({
   key,
@@ -19,7 +21,7 @@ const items2: MenuProps['items'] = ['1'].map((key) => ({
 export const Nav = () => {
   const navigate = useNavigate();
   const { isAuth } = useSelector(selectAuth);
-
+  const dispatch = useDispatch()
   return (
     <>
       <Layout.Header>
@@ -31,7 +33,7 @@ export const Nav = () => {
               selectable={false}
               items={items2}
               style={{ justifyContent: 'end' }}
-              onClick={() => console.log('Выйти')}
+              onClick={() => dispatch(logout())}
             />
           </>
         ) : (
