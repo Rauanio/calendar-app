@@ -2,13 +2,14 @@ import axios from 'axios';
 import { AppDispatch } from '..';
 import { setAuth, setError, setIsLoading, setUser } from './authSlice';
 import { IUser } from '../../models/IUser';
-import { setQuests } from './eventSlice';
+import { setEvents, setQuests } from './eventSlice';
+import { IEvent } from '../../models/IEvent';
 
 export const login =
   (username: string, password: string): any =>
-  async (dispath: AppDispatch) => {
+  async (dispatch: AppDispatch) => {
     try {
-      dispath(setIsLoading(true));
+      dispatch(setIsLoading(true));
       setTimeout(async () => {
         const response = await axios.get<IUser[]>('./users.json');
         const mockUser = response.data.find(
@@ -17,30 +18,59 @@ export const login =
         if (mockUser) {
           localStorage.setItem('auth', 'true');
           localStorage.setItem('username', mockUser.username);
-          dispath(setAuth(true));
-          dispath(setUser(mockUser));
+          dispatch(setUser(mockUser));
+          dispatch(setAuth(true));
         } else {
-          dispath(setError('Не правльный логин или пароль!'));
+          dispatch(setError('Некорректный логин или пароль'));
         }
-        dispath(setIsLoading(false));
+        dispatch(setIsLoading(false));
       }, 1000);
     } catch (e) {
-      dispath(setError('Ошибка!!!'));
+      dispatch(setError('Произошла ошибка при логине'));
     }
   };
 
-export const logout = (): any => async (dispath: AppDispatch) => {
+export const logout = (): any => async (dispatch: AppDispatch) => {
   localStorage.removeItem('auth');
   localStorage.removeItem('username');
-  dispath(setUser({} as IUser));
-  dispath(setAuth(false));
+  dispatch(setUser({} as IUser));
+  dispatch(setAuth(false));
 };
 
-export const fetchGuests = (): any => async (dispath: AppDispatch) => {
+export const fetchGuests = (): any => async (dispatch: AppDispatch) => {
   try {
     const res = await axios.get('/users.json');
-    dispath(setQuests(res.data));
+    dispatch(setQuests(res.data));
   } catch (e) {
     console.log(e);
   }
 };
+
+export const createEvent =
+  (event: IEvent): any =>
+  async (dispatch: AppDispatch) => {
+    try {
+      const events = localStorage.getItem('events') || '[]';
+      const json = JSON.parse(events) as IEvent[];
+      json.push(event);
+      dispatch(setEvents(json));
+      localStorage.setItem('events', JSON.stringify(json));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const fetchEvents =
+  (username: string): any =>
+  async (dispatch: AppDispatch) => {
+    try {
+      const events = localStorage.getItem('events') || '[]';
+      const json = JSON.parse(events) as IEvent[];
+      const currentUserEvents = json.filter(
+        (ev) => ev.author === username || ev.guest === username,
+      );
+      dispatch(setEvents(currentUserEvents));
+    } catch (e) {
+      console.log(e);
+    }
+  };

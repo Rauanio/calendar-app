@@ -4,14 +4,14 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface AuthState {
   isAuth: boolean;
-  user: IUser[];
+  user: IUser;
   isLoading: boolean;
   error: string;
 }
 
 const initialState: AuthState = {
   isAuth: false,
-  user: {} as IUser[],
+  user: {} as IUser,
   isLoading: false,
   error: '',
 };

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser } from '../../models/IUser';
 import { IEvent } from '../../models/IEvent';
 import { RootState } from '..';
@@ -9,15 +9,15 @@ interface EventState {
 }
 
 const initialState: EventState = {
-  quests: [],
   events: [],
+  quests: [],
 };
 
 const eventSlice = createSlice({
-  name: 'event',
+  name: 'events',
   initialState,
   reducers: {
-    setQuests(state, action) {
+    setQuests(state, action: PayloadAction<IUser[]>) {
       state.quests = action.payload;
     },
     setEvents(state, action) {
@@ -26,7 +26,7 @@ const eventSlice = createSlice({
   },
 });
 
-export const selectEvent = (state: RootState) => state.event;
+export const selectEvent = (state: RootState) => state.events;
 
 export const { setEvents, setQuests } = eventSlice.actions;
 export default eventSlice.reducer;
